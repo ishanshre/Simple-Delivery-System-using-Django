@@ -13,3 +13,4 @@ class CustomUser(AbstractUser):
 
     age = models.PositiveIntegerField(blank = True, null=True)
     gender = models.CharField(max_length=10, choices=GENDER.choices, blank=True, null=True)
+
