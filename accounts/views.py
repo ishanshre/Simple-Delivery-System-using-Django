@@ -31,6 +31,12 @@ class UserLoginView(SuccessMessageMixin, LoginView):
     template_name = 'accounts/login.html'
     message = 'Login Successfull'
     
+    def form_valid(self, form):
+        remember_me = form.cleaned_data['remember_me']
+        if not remember_me:
+            self.request.session.set_expiry(0)
+            self.request.session.modified = True
+        return super(UserLoginView, self).form_valid(form)
 
     def get_success_message(self, cleaned_data):
         print(cleaned_data)

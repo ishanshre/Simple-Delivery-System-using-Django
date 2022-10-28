@@ -4,8 +4,8 @@
 {% block body %}
 <div class="container">
     <h1 class="text-center">Login</h1>
-    <div class="container">
-        <form action="" method="post">
+    <div class="container d-flex justify-content-md-center">
+        <form action="" method="post" class="w-50">
             {% csrf_token %}
             {{ form|crispy }}
             <input type="submit" value="Login">
