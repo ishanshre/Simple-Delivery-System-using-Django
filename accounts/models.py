@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from phonenumber_field.modelfields import PhoneNumberField
+from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 
@@ -18,10 +19,10 @@ class CustomUser(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='profile/image/', default = 'profile.jpg', null=True, blank=True)
-    bio = models.TextField(max_length=5000)
+    bio = RichTextUploadingField(max_length=10000)
     country = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
-    phoneNumber = models.CharField(max_length=10)
+    phoneNumber = PhoneNumberField(blank=True, null=True)
 
     def __str__(self):
         return self.user.username
