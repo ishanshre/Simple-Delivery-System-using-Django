@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import environs
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+env = environs.Env()
+environs.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -43,7 +45,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'django_phonenumbers',
     'phonenumber_field',
-
+    'captcha',
 
     'accounts.apps.AccountsConfig',
     'delivery.apps.DeliveryConfig',
@@ -152,3 +154,8 @@ LOGIN_REDIRECT_URL = 'delivery:index'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 LOGIN_URL = 'accounts:login'
 CKEDITOR_UPLOAD_PATH = "uploads/"
+
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from ckeditor_uploader.fields import RichTextUploadingField
+
 # Create your models here.
 
 
@@ -14,7 +15,7 @@ class CustomUser(AbstractUser):
     age = models.PositiveIntegerField(blank = True, null=True)
     date_of_birth = models.DateTimeField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=GENDER.choices, blank=True, null=True)
-
+    
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='user_profile')
