@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='user_profile')
     avatar = models.ImageField(upload_to='profile/image/', default = 'profile.jpg', null=True, blank=True)
     bio = RichTextUploadingField(max_length=10000)
     country = models.CharField(max_length=100)
