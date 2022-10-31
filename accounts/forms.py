@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
+from .models import Profile
 class CustomUserCreationForm(UserCreationForm):
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
     class Meta(UserCreationForm.Meta):
@@ -27,3 +28,9 @@ class UserLoginForm(AuthenticationForm):
     class Meta:
         model = get_user_model()
         fields = ['username','password','remember_me']
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar','bio','country','address','phoneNumber']

@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from .forms import CustomUserCreationForm, UserLoginForm
+from .forms import CustomUserCreationForm, UserLoginForm, ProfileForm
+from django.views import View
 from django.views.generic.edit import CreateView
 from django.contrib.auth.views import LoginView
 from django.contrib.messages.views import SuccessMessageMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from .models import Profile
 # Create your views here.
 
 
@@ -47,3 +49,17 @@ class UserLoginView(SuccessMessageMixin, LoginView):
         if request.user.is_authenticated:
             return redirect('delivery:index')
         return super().dispatch(request, *args, **kwargs)
+
+
+
+class UserProfileView(LoginRequiredMixin,View):
+    template_name = 'accounts/profile.html'
+    def get(self, request, *args, **kwargs):
+        
+        profile = Profile.objects.get(user=request.user)
+        profile_form = ProfileForm(instance=profile)
+        context = {
+            'profile':profile,
+            'profile_form':profile_form
+        }
+        return render(request, self.template_name, context)
