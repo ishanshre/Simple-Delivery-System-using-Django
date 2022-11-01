@@ -5,6 +5,8 @@ from django import forms
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
 from .models import Profile
+from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 class CustomUserCreationForm(UserCreationForm):
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox)
     class Meta(UserCreationForm.Meta):
@@ -34,3 +36,6 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar','bio','country','address','phoneNumber']
+        widgets = {
+            'phoneNumber': PhoneNumberPrefixWidget(initial="NP")
+        }

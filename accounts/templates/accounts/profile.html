@@ -7,10 +7,13 @@
         <div class="col-md-4">
             <img src="{{ profile.avatar.url }}" alt="profile" width="50px" height="50px">
             <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+            <h2>Age: {{ profile.user.age }}</h2>
+            <h2>Gender: {{ profile.user.gender }}</h2>
         </div>
         <div class="col-md-8">
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                {{ user_form|crispy }}
                 {{ profile_form|crispy }}
                 <input type="submit" value="Update">
             </form>
