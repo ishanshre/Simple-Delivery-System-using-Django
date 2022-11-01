@@ -1,6 +1,9 @@
 {% extends 'delivery/base.html' %}
 {% load crispy_forms_tags %}
 {% block title %}{{ request.user.username|title }}'s Profile{% endblock title %}
+{% block head %}
+{% include 'accounts/firebase.html' %}
+{% endblock head %}
 {% block body %}
 <div class="container">
     <div class="row">
