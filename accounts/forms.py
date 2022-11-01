@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django import forms
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV2Checkbox
@@ -33,9 +33,16 @@ class UserLoginForm(AuthenticationForm):
 
 
 class ProfileForm(forms.ModelForm):
+    profile_update = forms.BooleanField(widget=forms.HiddenInput, initial=True)
     class Meta:
         model = Profile
         fields = ['avatar','bio','country','address','phoneNumber']
         widgets = {
             'phoneNumber': PhoneNumberPrefixWidget(initial="NP")
         }
+
+class UserPasswordChangeForm(PasswordChangeForm):
+    change_password = forms.BooleanField(widget=forms.HiddenInput, initial=True)
+    class Meta:
+        model = get_user_model()
+        fields = ['old_password', 'new_password1', 'new_password2']
