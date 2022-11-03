@@ -74,18 +74,17 @@ class UserProfileView(LoginRequiredMixin,View):
         user_form = CustomUserChangeForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST,request.FILES, instance=request.user.user_profile)
         password_change_form = UserPasswordChangeForm(request.user, request.POST)
-        if 'change_password' in request.POST:
-
-            if password_change_form.is_valid():
-                user = password_change_form.save()
-                update_session_auth_hash(request, user)
-                messages.success(request, 'Password change Successfull')
-                return redirect('accounts:profile')
         if 'profile_update' in request.POST:
             if user_form.is_valid() and profile_form.is_valid():
                 user_form.save()
                 profile_form.save()
                 messages.success(request, 'Info Updated')
+                return redirect('accounts:profile')
+        if 'change_password' in request.POST:
+            if password_change_form.is_valid():
+                user = password_change_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Password change Successfull')
                 return redirect('accounts:profile')
         context = {
             'profile':profile,

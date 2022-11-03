@@ -12,6 +12,8 @@
             <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
             <h2>Age: {{ profile.user.age }}</h2>
             <h2>Gender: {{ profile.user.gender }}</h2>
+            <h2>Phone: {{ profile.phoneNumber }}</h2>
+            <h2>{% if profile.is_phoneNumber_verified %}Verified{% else %}Not Verified {% endif %}</h2>
         </div>
         <div class="col-md-8">
             <div class="container">
