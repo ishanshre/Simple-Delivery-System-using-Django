@@ -46,3 +46,4 @@ class UserPasswordChangeForm(PasswordChangeForm):
     class Meta:
         model = get_user_model()
         fields = ['old_password', 'new_password1', 'new_password2']
+    
