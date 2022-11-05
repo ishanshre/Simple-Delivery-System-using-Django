@@ -3,6 +3,7 @@
 {% block title %}{{ request.user.username|title }}'s Profile{% endblock title %}
 {% block head %}
 {% include 'accounts/firebase.html' %}
+<script src="https://js.stripe.com/v3/"></script>
 {% endblock head %}
 {% block body %}
 <div class="container">
@@ -18,24 +19,91 @@
         <div class="col-md-8">
             <div class="container">
                 <h1>Change Info</h1>
-                <form action="" method="post" enctype="multipart/form-data">
+                <form action="" method="post" enctype="multipart/form-data" class="m-3">
                     {% csrf_token %}
                     {{ user_form|crispy }}
                     {{ profile_form|crispy }}
-                    <input type="submit" value="Update">
+                    <input type="submit" value="Update" class="btn btn-outline-secondary">
                 </form>
             </div>
             <div class="container">
                 <h1>Change Password</h1>
-                <form action="" method="post">
+                <form action="" method="post" class="m-3">
                     {% csrf_token %}
                     {{ password_change_form|crispy }}
-                    <input type="submit" value="Change Password">
+                    <input type="submit" value="Change Password" class="btn btn-outline-secondary">
     
                 </form>
+            </div>
+            <div class="container card h-30">
+                <div clascard-elements="card-head">
+                    <h1>Your Debit/Credit Card</h1>
+                </div>
+                <div class="card-body m-3">
+                    <form id="payment-form" data-secret="{{ client_secret }}">
+                        <div id="payment-element" class="mt-3">
+                          <!-- Elements will create form elements here -->
+                        </div>
+                      
+                        <button id="submit" class="btn btn-outline-warning mt-3" type="button">Save</button>
+                      </form>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
+<script>
+    const options = {
+        clientSecret: '{{client_secret }}',
+        appearance : {
+        theme: 'flat',
+        variables: {
+          fontWeightNormal: '500',
+          borderRadius: '2px',
+          colorBackground: 'white',
+          colorPrimary: '#DF1B41',
+          colorPrimaryText: 'white',
+          spacingGridRow: '15px'
+        },
+        rules: {
+          '.Label': {
+            marginBottom: '6px'
+          },
+          '.Tab, .Input, .Block': {
+            boxShadow: '0px 3px 10px rgba(18, 42, 66, 0.08)',
+            padding: '12px'
+          }
+        }
+    },
+    };
+    var stripe = Stripe("{{ STRIPE_API_PUBLIC_KEY }}");
+    var elements = stripe.elements(options);
+    var paymentElement = elements.create('card');
+    paymentElement.mount('#payment-element');
+
+    var cardHolderName = document.getElementById('cardholder-name');
+    var cardButton = document.getElementById('submit');
+    var clientSecret = "{{ client_secret }}";
+
+    cardButton.addEventListener('click', function (ev){
+        ev.preventDefault()
+        stripe.confirmCardSetup(clientSecret, {
+            payment_method: {
+            card: paymentElement,
+        },
+     }).then((result)=>{
+            if (result.error){
+                console.log(result.error.message, 'error');
+            } else {
+                console.log("Payment Method Added Successfully");
+                window.location.reload();
+                
+            }
+        })
+    });
+
+// Pass the appearance object to the Elements instance
+
+</script>
 {% endblock body %}

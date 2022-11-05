@@ -25,7 +25,9 @@ class Profile(models.Model):
     address = models.CharField(max_length=200)
     phoneNumber = PhoneNumberField(blank=True, null=True)
     is_phoneNumber_verified = models.BooleanField(default=False)
-
+    stripe_id = models.CharField(max_length=255, blank=True)
+    stripe_payment_method_id = models.CharField(max_length=255, blank=True)
+    stripe_card_last4 = models.CharField(max_length=255, blank=True)
     def __str__(self):
         return self.user.username
 

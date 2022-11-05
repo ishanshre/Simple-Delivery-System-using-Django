@@ -9,7 +9,10 @@ from django.urls import reverse_lazy
 from .models import Profile
 from django.contrib.auth import update_session_auth_hash # used in changing user password
 from django.contrib import messages
+from django.conf import settings
+import stripe
 # Create your views here.
+stripe.api_key = settings.STRIPE_API_PRIVATE_KEY
 
 
 class UserSignUp(SuccessMessageMixin,CreateView):
@@ -61,11 +64,36 @@ class UserProfileView(LoginRequiredMixin,View):
         user_form = CustomUserChangeForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.user_profile)
         password_change_form = UserPasswordChangeForm(request.user)
+        # creating stripe 
+        if not profile.stripe_id:# check if stripe id exist
+            stripeProfile = stripe.Customer.create()# create a stripe profile
+            profile.stripe_id = stripeProfile['id']# assign stripe id from stripeProfile to stripe_id of profile
+            profile.save()# save the profile in database
+        # get stripe payment method
+        stripe_payment_method = stripe.PaymentMethod.list(
+            customer = profile.stripe_id,
+            type="card"
+        )
+        print(stripe_payment_method)
+        if stripe_payment_method and len(stripe_payment_method.data)>0:
+            payment_method = stripe_payment_method.data[0]
+            profile.stripe_payment_method_id = payment_method.id
+            profile.stripe_card_last4 = payment_method.card.last4
+            profile.save()
+        else:
+            profile.stripe_payment_method_id =""
+            profile.stripe_card_last4 =""
+            profile.save()
+        intent = stripe.SetupIntent.create(
+            customer = profile.stripe_id
+        )
         context = {
             'profile':profile,
             'profile_form':profile_form,
             'user_form':user_form,
             'password_change_form':password_change_form,
+            'client_secret': intent.client_secret,
+            'STRIPE_API_PUBLIC_KEY':settings.STRIPE_API_PUBLIC_KEY,
         }
         return render(request, self.template_name, context)
     

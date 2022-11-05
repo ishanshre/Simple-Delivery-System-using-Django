@@ -161,3 +161,7 @@ SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'Deleviry System <no-reply@deleviry.localhost>'
+
+# stripe payment
+STRIPE_API_PUBLIC_KEY = env('STRIPE_PUB')
+STRIPE_API_PRIVATE_KEY = env('STRIPE_PRI')
